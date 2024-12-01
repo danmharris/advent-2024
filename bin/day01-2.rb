@@ -4,7 +4,7 @@ left.map!(&:to_i)
 right.map!(&:to_i)
 
 score = left.reduce(0) do |s, location|
-  s += location * (right.filter { _1 == location }.size)
+  s += location * right.count(location)
 end
 
 p score
