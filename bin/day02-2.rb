@@ -11,8 +11,10 @@ reports = ARGF.readlines.map do |line|
 end
 
 safe = reports.reduce(0) do |acc, report|
-  combinations = [report].concat(report.combination(report.size - 1).to_a)
-  acc + (combinations.any? { check_report(_1) } ? 1 : 0)
+  combinations = report.combination(report.size - 1).to_a.append(report)
+  next acc unless combinations.any? { check_report(_1) }
+
+  acc + 1
 end
 
 p safe

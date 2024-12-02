@@ -11,7 +11,9 @@ reports = ARGF.readlines.map do |line|
 end
 
 safe = reports.reduce(0) do |acc, report|
-  acc + (check_report(report) ? 1 : 0)
+  next acc unless check_report(report)
+
+  acc + 1
 end
 
 p safe
