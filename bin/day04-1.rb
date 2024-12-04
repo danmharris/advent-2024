@@ -15,36 +15,29 @@ def find_letter_indexes(grid, letter)
   indexes
 end
 
-def search_direction(letters, pos, dpos, letter)
-  return true if NEXT_LETTERS[letter].nil?
-
+def search_direction(grid, pos, dpos, letter)
   next_letter = NEXT_LETTERS[letter]
-  positions = letters[next_letter]
+  return true if next_letter.nil?
 
   x, y = pos
   dx, dy = dpos
-  new_pos = [x + dx, y + dy]
+  nx = x + dx
+  ny = y + dy
 
-  return false unless positions.include?(new_pos)
+  return false if nx.negative? || ny.negative?
+  return false unless grid.dig(ny, nx) == next_letter
 
-  search_direction(letters, new_pos, dpos, next_letter)
+  search_direction(grid, [nx, ny], dpos, next_letter)
 end
 
 grid = ARGF.readlines.map { _1.chomp.split('') }
 
-letters = {
-  'X' => find_letter_indexes(grid, 'X'),
-  'M' => find_letter_indexes(grid, 'M'),
-  'A' => find_letter_indexes(grid, 'A'),
-  'S' => find_letter_indexes(grid, 'S')
-}
-
 directions = (-1..1).to_a.product((-1..1).to_a)
 directions.delete([0, 0])
 
-res = letters['X'].map do |pos|
+res = find_letter_indexes(grid, 'X').map do |pos|
   directions.count do |dpos|
-    search_direction(letters, pos, dpos, 'X')
+    search_direction(grid, pos, dpos, 'X')
   end
 end
 
